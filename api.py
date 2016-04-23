@@ -1,6 +1,8 @@
+import os
 import requests
 import urllib
 
+HOST = os.environ['OOZIE_HOST']
 
 
 def _get_workflows(filters, offset, length):

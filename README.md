@@ -3,7 +3,7 @@
 ## Simple print
 
 ```
-$ ./repl.py
+$ OOZIE_HOST="<host>" ./repl.py
 
 In [1]: p(all())
 RUNNING ---> sello-product-view-facts                           Sat, 23 Apr 2016 11:19:00 EST by oozie
@@ -28,7 +28,7 @@ SUCCEEDED -> theme-dimension                                    Sat, 23 Apr 2016
 ## Detailed print
 
 ```
-$ ./repl.py
+$ OOZIE_HOST="<host>" ./repl.py
 
 In [1]: pp(all())
 RUNNING ---> sello-product-view-facts                           Sat, 23 Apr 2016 11:19:00 EST by oozie
@@ -56,7 +56,7 @@ SUCCEEDED -> storefront-session-dimless-rollup-resolver-v2      Sat, 23 Apr 2016
 ## Detailed print of recently failed jobs
 
 ```
-$ ./repl.py
+$ OOZIE_HOST="<host>" ./repl.py
 
 In [1]: pp(failed(n=2))
 FAILED ----> create-parquet-tables                              Tue, 19 Apr 2016 18:12:00 EST by oozie
@@ -98,7 +98,7 @@ FAILED ----> zendesk-ticket-pipeline-facts                      Fri, 08 Apr 2016
 ## Detailed print by job name
 
 ```
-$ ./repl.py
+$ OOZIE_HOST="<host>" ./repl.py
 
 In [1]: pp(by_name('smileys-facts', n=2))
 RUNNING ---> smileys-facts                                      Sat, 23 Apr 2016 11:15:19 EST by oozie
@@ -115,7 +115,7 @@ SUCCEEDED -> smileys-facts                                      Sat, 23 Apr 2016
 ## Generate and open flow graph
 
 ```
-$ ./repl.py
+$ OOZIE_HOST="<host>" ./repl.py
 
 In [1]: flow = by_name('smileys-facts', n=1)[0]
 
