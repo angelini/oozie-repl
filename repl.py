@@ -7,6 +7,7 @@ import os
 import subprocess
 import tempfile
 
+from flow import Flow
 from stdout import p, pp  # NOQA
 
 _tempfiles = []
@@ -16,16 +17,21 @@ def take(generator, n=5):
     return tuple(itertools.islice(generator, n))
 
 
+def _get_flows(user, status, n):
+    workflows = take(api.get_workflows({'user': user, 'status': status}), n)
+    return [Flow.from_workflow_id(w['id']) for w in workflows]
+
+
 def failed(user='oozie', n=5):
-    return take(api.get_workflows({'user': user, 'status': 'FAILED'}), n)
+    return _get_flows(user, 'FAILED', n)
 
 
 def running(user='oozie', n=5):
-    return take(api.get_workflows({'user': user, 'status': 'RUNNING'}), n)
+    return _get_flows(user, 'RUNNING', n)
 
 
 def all(user='oozie', n=5):
-    return take(api.get_workflows({'user': user}), n)
+    return _get_flows(user, None, n)
 
 
 def open_graph(workflow):

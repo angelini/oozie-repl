@@ -1,6 +1,7 @@
-import api
-from colorama import Fore as F, Style as S
 import re
+
+from colorama import Fore as F, Style as S
+from flow import Flow
 
 
 def time_from_datestring(date_str):
@@ -11,10 +12,10 @@ def time_from_datestring(date_str):
     return match.group('time')
 
 
-def sort_by_start(tree):
-    if not tree:
+def sort_jobs_by_start(flow):
+    if not flow:
         return []
-    return sorted(tree.items(), key=lambda i: i[1]['start'])
+    return sorted(flow.jobs.items(), key=lambda i: i[1].start)
 
 
 def color_status(status):
@@ -39,44 +40,44 @@ def color_name(name):
     return F.MAGENTA + formatted + S.RESET_ALL
 
 
-def format_workflow_header(workflow):
+def format_flow_header(flow):
     format_str = '{status} {name} {start} by {user}'
     return format_str.format(
-        status=color_status(workflow['status']),
-        name=color_name(workflow['appName']),
-        start=workflow['startTime'],
-        user=workflow['user'])
+        status=color_status(flow.status),
+        name=color_name(flow.name),
+        start=flow.start,
+        user=flow.user)
 
 
-def format_workflow_action(name, action, prefix='  '):
+def format_job(job, prefix='  '):
     name_len = 52 - len(prefix)
     format_str = '{prefix}{status} {name:<' + str(name_len) + '} {start} to {end}'
     lines = [format_str.format(
         prefix=prefix,
-        status=color_status(action['status']),
-        name=name,
-        start=time_from_datestring(action['start']),
-        end=time_from_datestring(action['end']))]
+        status=color_status(job.status),
+        name=job.name,
+        start=time_from_datestring(job.start),
+        end=time_from_datestring(job.end))]
 
-    for child in sort_by_start(action.get('children')):
-        lines.append(format_workflow_action(child[0], child[1], prefix + '  '))
+    if isinstance(job, Flow):
+        for (_, nested_job) in sort_jobs_by_start(job):
+            lines.append(format_job(nested_job, prefix + '  '))
 
     return '\n'.join(lines)
 
 
-def format_workflow_tree(tree):
-    return '\n'.join([format_workflow_action(n, a)
-                      for (n, a) in sort_by_start(tree)])
+def format_jobs(flow):
+    return '\n'.join([format_job(job)
+                      for (_, job) in sort_jobs_by_start(flow)])
 
 
-def p(workflows):
-    for workflow in workflows:
-        print(format_workflow_header(workflow))
+def p(flows):
+    for flow in flows:
+        print(format_flow_header(flow))
 
 
-def pp(workflows):
-    for workflow in workflows:
-        tree = api.get_full_tree(workflow['id'])
-        print(format_workflow_header(workflow))
-        print(format_workflow_tree(tree))
+def pp(flows):
+    for flow in flows:
+        print(format_flow_header(flow))
+        print(format_jobs(flow))
         print()

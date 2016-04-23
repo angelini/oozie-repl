@@ -5,7 +5,8 @@ import urllib
 
 def _get_workflows(filters, offset, length):
     filters = [urllib.parse.urlencode({k: v})
-               for (k, v) in filters.items()]
+               for (k, v) in filters.items()
+               if v]
 
     response = requests.get(HOST + '/oozie/v1/jobs', params={
         'timezone': 'EST',
