@@ -38,10 +38,10 @@ def by_name(name, user=None, status=None, n=5):
     return _get_flows(user=user, status=status, name=name, n=n)
 
 
-def open_graph(workflow):
+def open_graph(flow):
     temp_fd, path = tempfile.mkstemp()
     with os.fdopen(temp_fd, mode='bw') as temp_file:
-        temp_file.write(api.get_graph_png(workflow))
+        temp_file.write(api.get_graph_png(flow.id))
 
     _tempfiles.append(path)
     subprocess.check_output(['open', path])
