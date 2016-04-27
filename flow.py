@@ -20,6 +20,12 @@ class Job:
         self.start = start
         self.end = end
 
+    def __repr__(self):
+        return 'Job {name} ({status})'.format(
+            name=self.name,
+            status=self.status
+        )
+
 
 class Flow:
 
@@ -59,3 +65,9 @@ class Flow:
         self.start = start
         self.end = end
         self.jobs = {}
+
+    def __repr__(self):
+        return 'Flow {name} ({status})'.format(
+            name=self.name,
+            status=self.status
+        )
