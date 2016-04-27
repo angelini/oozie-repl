@@ -7,18 +7,29 @@ class Job:
     def from_action(action):
         return Job(
             id=action['id'],
+            yarn_id=action['externalId'],
             name=action['name'],
             status=action['status'],
             start=action['startTime'],
-            end=action['endTime']
+            end=action['endTime'],
+            application_uri=action['consoleUrl'],
         )
 
-    def __init__(self, id, name, status, start, end):
+    def __init__(self, id, yarn_id, name, status, start, end, application_uri):
         self.id = id
+        self.yarn_id = yarn_id
         self.name = name
         self.status = status
         self.start = start
         self.end = end
+        self.application_uri = application_uri
+        self._logs_link = None
+
+    @property
+    def logs_link(self):
+        if not self._logs_link:
+            self._logs_link = api.get_logs_link(self.application_uri, self.yarn_id, self.status)
+        return self._logs_link
 
     def __repr__(self):
         return 'Job {name} ({status})'.format(

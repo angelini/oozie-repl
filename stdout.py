@@ -1,7 +1,7 @@
 import re
 
 from colorama import Fore as F, Style as S
-from flow import Flow
+from flow import Flow, Job
 
 
 def time_from_datestring(date_str):
@@ -49,35 +49,47 @@ def format_flow_header(flow):
         user=flow.user)
 
 
-def format_job(job, prefix='  '):
+def format_job(job, include_logs=False, prefix='  '):
     name_len = 52 - len(prefix)
-    format_str = '{prefix}{status} {name:<' + str(name_len) + '} {start} to {end}'
-    lines = [format_str.format(
-        prefix=prefix,
-        status=color_status(job.status),
-        name=job.name,
-        start=time_from_datestring(job.start),
-        end=time_from_datestring(job.end))]
+    lines = [
+        ('{prefix}{status} {name:<' + str(name_len) + '} {start} to {end}').format(
+            prefix=prefix,
+            status=color_status(job.status),
+            name=job.name,
+            start=time_from_datestring(job.start),
+            end=time_from_datestring(job.end)),
+    ]
+
+    if include_logs and isinstance(job, Job):
+        lines.append('{prefix}             {logs}'.format(
+            prefix=prefix,
+            logs=job.logs_link))
 
     if isinstance(job, Flow):
         for (_, nested_job) in sort_jobs_by_start(job):
-            lines.append(format_job(nested_job, prefix + '  '))
+            lines.append(format_job(nested_job, include_logs, prefix + '  '))
 
     return '\n'.join(lines)
 
 
-def format_jobs(flow):
-    return '\n'.join([format_job(job)
+def format_jobs(flow, include_logs=False):
+    return '\n'.join([format_job(job, include_logs=include_logs)
                       for (_, job) in sort_jobs_by_start(flow)])
 
 
 def p(flows):
+    if isinstance(flows, Flow):
+        flows = [flows]
+
     for flow in flows:
         print(format_flow_header(flow))
 
 
-def pp(flows):
+def pp(flows, logs=False):
+    if isinstance(flows, Flow):
+        flows = [flows]
+
     for flow in flows:
         print(format_flow_header(flow))
-        print(format_jobs(flow))
+        print(format_jobs(flow, include_logs=logs))
         print()

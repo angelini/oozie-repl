@@ -1,9 +1,16 @@
 # Oozie REPL
 
+## Export ENV variables
+
+```
+$ export OOZIE_HOST="<host>"
+$ expore HISTORY_SERVER="<host>"
+```
+
 ## Simple print
 
 ```
-$ OOZIE_HOST="<host>" ./repl.py
+$ ./repl.py
 
 In [1]: p(all())
 RUNNING ---> sello-product-view-facts                           Sat, 23 Apr 2016 11:19:00 EST by oozie
@@ -28,7 +35,7 @@ SUCCEEDED -> theme-dimension                                    Sat, 23 Apr 2016
 ## Detailed print
 
 ```
-$ OOZIE_HOST="<host>" ./repl.py
+$ ./repl.py
 
 In [1]: pp(all())
 RUNNING ---> sello-product-view-facts                           Sat, 23 Apr 2016 11:19:00 EST by oozie
@@ -56,7 +63,7 @@ SUCCEEDED -> storefront-session-dimless-rollup-resolver-v2      Sat, 23 Apr 2016
 ## Detailed print of recently failed jobs
 
 ```
-$ OOZIE_HOST="<host>" ./repl.py
+$ ./repl.py
 
 In [1]: pp(failed(n=2))
 FAILED ----> create-parquet-tables                              Tue, 19 Apr 2016 18:12:00 EST by oozie
@@ -112,10 +119,21 @@ SUCCEEDED -> smileys-facts                                      Sat, 23 Apr 2016
   OK --------> hive-load                                          07:44:31 to 07:46:06
 ```
 
+## Include logs in detailed print
+
+```
+$ ./repl.py
+
+In [1]: pp(all(n=1), logs=True)
+RUNNING ---> product-label-metadata                             Tue, 26 Apr 2016 20:57:00 EST by oozie
+  RUNNING ---> build                                              20:57:00 to --:--:--
+               <host>/node/containerlogs/container_e04_145522548_352939_01_000001/oozie/stdout/?start=0
+```
+
 ## Generate and open flow graph
 
 ```
-$ OOZIE_HOST="<host>" ./repl.py
+$ ./repl.py
 
 In [1]: flow = by_name('smileys-facts', n=1)[0]
 
