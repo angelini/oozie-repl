@@ -8,34 +8,44 @@ import subprocess
 import tempfile
 
 from flow import Flow
+from coordinator import Coordinator as CoordinatorObject
 from stdout import p, pp  # NOQA
 
 _tempfiles = []
+
+Coordinator = api.ArtifactType.Coordinator
+Workflow = api.ArtifactType.Workflow
 
 
 def take(generator, n=5):
     return tuple(itertools.islice(generator, n))
 
 
-def _get_flows(user=None, status=None, name=None, n=5):
-    workflows = take(api.get_workflows({'user': user, 'status': status, 'name': name}), n)
-    return [Flow.from_workflow_id(w['id']) for w in workflows]
+def _get_jobs(form=Workflow, user=None, status=None, name=None, n=5):
+    jobs = take(api.get_jobs(form=form, filters={'user': user, 'status': status, 'name': name}), n=n)
+    _, _, job_id = api.JOB_TYPE_STRINGS[form]
+    if form == Workflow:
+        return [Flow.from_workflow_id(job[job_id]) for job in jobs]
+    elif form == Coordinator:
+        return [CoordinatorObject.from_coordinator_id(job[job_id]) for job in jobs]
+    else:
+        raise ValueError('Unrecognized form %s' % form)
 
 
-def failed(user='oozie', n=5):
-    return _get_flows(user=user, status='FAILED', n=n)
+def failed(form=Workflow, user='oozie', n=5):
+    return _get_jobs(form=form, user=user, status='FAILED', n=n)
 
 
-def running(user='oozie', n=5):
-    return _get_flows(user=user, status='RUNNING', n=n)
+def running(form=Workflow, user='oozie', n=5):
+    return _get_jobs(form=form, user=user, status='RUNNING', n=n)
 
 
-def all(user='oozie', n=5):
-    return _get_flows(user=user, n=n)
+def all(form=Workflow, user='oozie', n=5):
+    return _get_jobs(form=form, user=user, n=n)
 
 
-def by_name(name, user=None, status=None, n=5):
-    return _get_flows(user=user, status=status, name=name, n=n)
+def by_name(name, form=Workflow, user=None, status=None, n=5):
+    return _get_jobs(form=form, user=user, status=status, name=name, n=n)
 
 
 def open_graph(flow):
