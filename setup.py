@@ -12,7 +12,7 @@ setup(
     author_email='',
     url='',
     license='',
-    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    packages=find_packages(exclude=['tests']),
     include_package_data=True,
     zip_safe=True,
     install_requires=[
@@ -21,7 +21,10 @@ setup(
         'requests==2.9.1',
     ],
     extras_require={
-        'test': ['pytest'],
+        'test': [
+            'pytest==2.9.1',
+            'responses==0.5.1',
+        ],
     },
     entry_points="""
     [console_scripts]

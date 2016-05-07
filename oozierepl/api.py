@@ -4,9 +4,6 @@ import urllib
 from enum import Enum
 from collections import namedtuple
 
-OOZIE_HOST = os.environ['OOZIE_HOST']
-HISTORY_SERVER = os.environ['HISTORY_SERVER']
-
 
 ArtifactStrings = namedtuple('ArtifactApi', ('type', 'result_type', 'id', 'id_suffix'))
 
@@ -17,10 +14,21 @@ class ArtifactType(Enum):
     Coordinator = 3
     CoordinatorAction = 4
 
+
 JOB_TYPE_STRINGS = {
     ArtifactType.Workflow: ArtifactStrings('wf', 'workflows', 'id', '-W'),
     ArtifactType.Coordinator: ArtifactStrings('coordinator', 'coordinatorjobs', 'coordJobId', '-C'),
 }
+
+
+
+def oozie_host():
+    return os.environ['OOZIE_HOST']
+
+
+def history_server():
+    return os.environ['HISTORY_SERVER']
+
 
 def _get_jobs(form, filters, offset, length):
     filters = [urllib.parse.urlencode({k: v})
@@ -28,7 +36,7 @@ def _get_jobs(form, filters, offset, length):
                if v]
 
     job_strings = JOB_TYPE_STRINGS[form]
-    response = requests.get(OOZIE_HOST + '/oozie/v2/jobs', params={
+    response = requests.get(oozie_host() + '/oozie/v2/jobs', params={
         'timezone': 'EST',
         'offset': offset,
         'len': length,
@@ -62,7 +70,7 @@ def get_coordinators(filters, offset=1, length=50):
 
 
 def get_graph_png(workflow_id):
-    response = requests.get(OOZIE_HOST + '/oozie/v1/job/{}'.format(workflow_id), params={
+    response = requests.get(oozie_host() + '/oozie/v1/job/{}'.format(workflow_id), params={
         'show': 'graph'
     })
 
@@ -74,7 +82,7 @@ def get_logs_link(application_uri, yarn_job_id, status):
     if status == 'RUNNING':
         uri = application_uri + 'ws/v1/mapreduce/jobs/{}/jobattempts'.format(yarn_job_id)
     else:
-        uri = HISTORY_SERVER + '/ws/v1/history/mapreduce/jobs/{}/jobattempts'.format(yarn_job_id)
+        uri = history_server() + '/ws/v1/history/mapreduce/jobs/{}/jobattempts'.format(yarn_job_id)
 
     response = requests.get(uri)
     response.raise_for_status()
@@ -87,7 +95,7 @@ def get_logs_link(application_uri, yarn_job_id, status):
 
 
 def get_job_info(job_id):
-    response = requests.get(OOZIE_HOST + '/oozie/v2/job/{}'.format(job_id), params={
+    response = requests.get(oozie_host() + '/oozie/v2/job/{}'.format(job_id), params={
         'timezone': 'EST',
         'show': 'info'
     })
