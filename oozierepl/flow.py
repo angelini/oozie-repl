@@ -1,4 +1,4 @@
-import api
+import oozierepl.api as api
 
 
 class Job:

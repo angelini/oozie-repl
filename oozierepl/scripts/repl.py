@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-import api
 import IPython
 import itertools
 import os
 import subprocess
 import tempfile
 
-from flow import Flow
-from coordinator import Coordinator as CoordinatorObject
-from stdout import p, pp  # NOQA
+import oozierepl.api as api
+from oozierepl.flow import Flow
+from oozierepl.coordinator import Coordinator as CoordinatorObject
+from oozierepl.stdout import p, pp  # NOQA
 
 _tempfiles = []
 

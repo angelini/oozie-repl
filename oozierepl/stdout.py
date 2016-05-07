@@ -1,7 +1,7 @@
 import re
 
 from colorama import Fore as F, Style as S
-from flow import Flow, Job
+from oozierepl.flow import Flow, Job
 
 
 def time_from_datestring(date_str):
