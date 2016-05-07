@@ -2,9 +2,13 @@ import os
 import requests
 import urllib
 from enum import Enum
+from collections import namedtuple
 
 OOZIE_HOST = os.environ['OOZIE_HOST']
 HISTORY_SERVER = os.environ['HISTORY_SERVER']
+
+
+ArtifactStrings = namedtuple('ArtifactApi', ('type', 'result_type', 'id', 'id_suffix'))
 
 
 class ArtifactType(Enum):
@@ -14,8 +18,8 @@ class ArtifactType(Enum):
     CoordinatorAction = 4
 
 JOB_TYPE_STRINGS = {
-    ArtifactType.Workflow: ('wf', 'workflows', 'id'),
-    ArtifactType.Coordinator: ('coordinator', 'coordinatorjobs', 'coordJobId'),
+    ArtifactType.Workflow: ArtifactStrings('wf', 'workflows', 'id', '-W'),
+    ArtifactType.Coordinator: ArtifactStrings('coordinator', 'coordinatorjobs', 'coordJobId', '-C'),
 }
 
 def _get_jobs(form, filters, offset, length):
@@ -23,17 +27,17 @@ def _get_jobs(form, filters, offset, length):
                for (k, v) in filters.items()
                if v]
 
-    job_type, result_type, _ = JOB_TYPE_STRINGS[form]
+    job_strings = JOB_TYPE_STRINGS[form]
     response = requests.get(OOZIE_HOST + '/oozie/v2/jobs', params={
         'timezone': 'EST',
         'offset': offset,
         'len': length,
         'filter': ';'.join(filters),
-        'jobtype': job_type
+        'jobtype': job_strings.type
     })
 
     response.raise_for_status()
-    return response.json()[result_type]
+    return response.json()[job_strings.result_type]
 
 
 def get_jobs(form, filters, offset=1, length=50):

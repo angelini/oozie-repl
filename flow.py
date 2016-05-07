@@ -43,9 +43,8 @@ class Flow:
     @staticmethod
     def from_workflow_id(workflow_id):
         info = api.get_job_info(workflow_id)
-        _, _, job_id = api.JOB_TYPE_STRINGS[api.ArtifactType.Workflow]
         flow = Flow(
-            id=info[job_id],
+            id=workflow_id,
             name=info['appName'],
             user=info['user'],
             status=info['status'],

@@ -5,9 +5,8 @@ class Coordinator:
     @staticmethod
     def from_coordinator_id(coordinator_id):
         info = api.get_job_info(coordinator_id)
-        _, _, job_id = api.JOB_TYPE_STRINGS[api.ArtifactType.Coordinator]
         coordinator = Coordinator(
-            id=info[job_id],
+            id=coordinator_id,
             name=info['coordJobName'],
             user=info['user'],
             status=info['status'],

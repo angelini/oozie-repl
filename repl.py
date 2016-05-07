@@ -23,11 +23,11 @@ def take(generator, n=5):
 
 def _get_jobs(form=Workflow, user=None, status=None, name=None, n=5):
     jobs = take(api.get_jobs(form=form, filters={'user': user, 'status': status, 'name': name}), n=n)
-    _, _, job_id = api.JOB_TYPE_STRINGS[form]
+    job_strings = api.JOB_TYPE_STRINGS[form]
     if form == Workflow:
-        return [Flow.from_workflow_id(job[job_id]) for job in jobs]
+        return [Flow.from_workflow_id(job[job_strings.id]) for job in jobs]
     elif form == Coordinator:
-        return [CoordinatorObject.from_coordinator_id(job[job_id]) for job in jobs]
+        return [CoordinatorObject.from_coordinator_id(job[job_strings.id]) for job in jobs]
     else:
         raise ValueError('Unrecognized form %s' % form)
 
