@@ -1,7 +1,7 @@
 import re
 
 from colorama import Fore as F, Style as S
-from oozierepl.flow import Flow, Job
+from oozierepl.workflow import Workflow, Job
 
 
 def time_from_datestring(date_str):
@@ -65,7 +65,7 @@ def format_job(job, include_logs=False, prefix='  '):
             prefix=prefix,
             logs=job.logs_link))
 
-    if isinstance(job, Flow):
+    if isinstance(job, Workflow):
         for (_, nested_job) in sort_jobs_by_start(job):
             lines.append(format_job(nested_job, include_logs, prefix + '  '))
 
@@ -78,7 +78,7 @@ def format_jobs(flow, include_logs=False):
 
 
 def p(flows):
-    if isinstance(flows, Flow):
+    if isinstance(flows, Workflow):
         flows = [flows]
 
     for flow in flows:
@@ -86,7 +86,7 @@ def p(flows):
 
 
 def pp(flows, logs=False):
-    if isinstance(flows, Flow):
+    if isinstance(flows, Workflow):
         flows = [flows]
 
     for flow in flows:

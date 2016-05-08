@@ -38,7 +38,7 @@ class Job:
         )
 
 
-class Flow:
+class Workflow:
 
     @staticmethod
     def from_workflow_id(workflow_id):
@@ -48,7 +48,7 @@ class Flow:
     @staticmethod
     def from_workflow_data(data):
         job_strings = api.JOB_TYPE_STRINGS[api.ArtifactType.Workflow]
-        flow = Flow(
+        flow = Workflow(
             id=data[job_strings.id],
             name=data['appName'],
             user=data['user'],
@@ -61,7 +61,7 @@ class Flow:
             name = action['name']
 
             if action['type'] == 'sub-workflow':
-                flow.jobs[name] = Flow.from_workflow_id(action['externalId'])
+                flow.jobs[name] = Workflow.from_workflow_id(action['externalId'])
 
             if action['type'] == 'shell':
                 if name.startswith('notify-joining-') or \
@@ -83,7 +83,7 @@ class Flow:
         self.jobs = {}
 
     def __repr__(self):
-        return 'Flow {name} ({status})'.format(
+        return 'Workflow {name} ({status})'.format(
             name=self.name,
             status=self.status
         )

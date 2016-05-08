@@ -1,5 +1,5 @@
 import responses
-from oozierepl.flow import Flow
+from oozierepl.workflow import Workflow as WorkflowObject
 from oozierepl.coordinator import Coordinator as CoordinatorObject
 from oozierepl.scripts.repl import by_name, Coordinator, Workflow
 
@@ -15,7 +15,7 @@ def test_by_name_workflow(flow_name, workflows_body, oozie_host, monkeypatch):
         status=200,
     )
     assert by_name(flow_name, form=Workflow) == [
-        Flow(
+        WorkflowObject(
             '0145308-160503113641936-oozie-oozi-W',
             'reportify-rdb-landing-pages-daily-rollup',
             'oozie',
@@ -23,7 +23,7 @@ def test_by_name_workflow(flow_name, workflows_body, oozie_host, monkeypatch):
             'Sat, 07 May 2016 11:29:08 EST',
             None
         ),
-        Flow(
+        WorkflowObject(
             '0145241-160503113641960-oozie-oozi-W',
             'reportify-rdb-landing-pages-daily-rollup',
             'oozie',
@@ -31,7 +31,7 @@ def test_by_name_workflow(flow_name, workflows_body, oozie_host, monkeypatch):
             'Sat, 07 May 2016 10:05:32 EST',
             'Sat, 07 May 2016 11:29:08 EST'
         ),
-        Flow(
+        WorkflowObject(
             '0145122-160503113641936-oozie-oozi-W',
             'reportify-rdb-landing-pages-daily-rollup',
             'oozie',
@@ -39,7 +39,7 @@ def test_by_name_workflow(flow_name, workflows_body, oozie_host, monkeypatch):
             'Sat, 07 May 2016 08:29:06 EST',
             'Sat, 07 May 2016 10:05:32 EST'
         ),
-        Flow(
+        WorkflowObject(
             '0144994-160503113641936-oozie-oozi-W',
             'reportify-rdb-landing-pages-daily-rollup',
             'oozie',
@@ -47,7 +47,7 @@ def test_by_name_workflow(flow_name, workflows_body, oozie_host, monkeypatch):
             'Sat, 07 May 2016 06:55:33 EST',
             'Sat, 07 May 2016 08:29:06 EST'
         ),
-        Flow(
+        WorkflowObject(
             '0144892-160503113641936-oozie-oozi-W',
             'reportify-rdb-landing-pages-daily-rollup',
             'oozie',

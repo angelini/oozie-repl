@@ -5,7 +5,7 @@ import subprocess
 import tempfile
 
 import oozierepl.api as api
-from oozierepl.flow import Flow
+from oozierepl.workflow import Workflow as WorkflowObject
 from oozierepl.coordinator import Coordinator as CoordinatorObject
 from oozierepl.stdout import p, pp  # NOQA
 
@@ -23,7 +23,7 @@ def _get_jobs(form=Workflow, user=None, status=None, name=None, n=5):
     jobs = take(api.get_jobs(form=form, filters={'user': user, 'status': status, 'name': name}), n=n)
     job_strings = api.JOB_TYPE_STRINGS[form]
     if form == Workflow:
-        return [Flow.from_workflow_data(job) for job in jobs]
+        return [WorkflowObject.from_workflow_data(job) for job in jobs]
     elif form == Coordinator:
         return [CoordinatorObject.from_coordinator_data(job) for job in jobs]
     else:
