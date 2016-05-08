@@ -8,9 +8,10 @@ def test_get_job_info_workflow(workflow_id, workflow_body, oozie_host, monkeypat
 
     responses.add(
         responses.GET,
-        'http://oozie-host/oozie/v2/job/' + workflow_id,
+        'http://oozie-host/oozie/v2/job/{}?timezone=EST&show=info'.format(workflow_id),
         json=workflow_body,
         status=200,
+        match_querystring=True,
     )
 
     data = get_job_info(workflow_id)
@@ -23,9 +24,10 @@ def test_get_job_info_coordinator(coordinator_id, coordinator_body, oozie_host, 
 
     responses.add(
         responses.GET,
-        'http://oozie-host/oozie/v2/job/' + coordinator_id,
+        'http://oozie-host/oozie/v2/job/{}?timezone=EST&show=info'.format(coordinator_id),
         json=coordinator_body,
         status=200,
+        match_querystring=True,
     )
 
     data = get_job_info(coordinator_id)

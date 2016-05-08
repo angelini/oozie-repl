@@ -10,9 +10,10 @@ def test_by_name_workflow(flow_name, workflows_body, oozie_host, monkeypatch):
 
     responses.add(
         responses.GET,
-        'http://oozie-host/oozie/v2/jobs',
+        'http://oozie-host/oozie/v2/jobs?len=50&filter=name%3Dreportify-rdb-landing-pages-daily-rollup&jobtype=wf&timezone=EST&offset=1',
         json=workflows_body,
         status=200,
+        match_querystring=True,
     )
     assert by_name(flow_name, form=Workflow) == [
         WorkflowObject(
@@ -63,9 +64,10 @@ def test_by_name_coordinator(flow_name, coordinators_body, oozie_host, monkeypat
 
     responses.add(
         responses.GET,
-        'http://oozie-host/oozie/v2/jobs',
+        'http://oozie-host/oozie/v2/jobs?timezone=EST&offset=1&jobtype=coordinator&len=50&filter=name%3Dreportify-rdb-landing-pages-daily-rollup',
         json=coordinators_body,
         status=200,
+        match_querystring=True,
     )
     actual = by_name(flow_name, form=Coordinator)
     assert actual == [
