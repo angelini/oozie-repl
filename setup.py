@@ -23,6 +23,7 @@ setup(
     extras_require={
         'test': [
             'pytest==2.9.1',
+            'pytest-cov==2.2.1',
             'responses==0.5.1',
         ],
     },
