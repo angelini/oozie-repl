@@ -42,17 +42,22 @@ class Flow:
 
     @staticmethod
     def from_workflow_id(workflow_id):
-        info = api.get_job_info(workflow_id)
+        return from_workflow_data(api.get_job_info(workflow_id))
+
+
+    @staticmethod
+    def from_workflow_data(data):
+        job_strings = api.JOB_TYPE_STRINGS[api.ArtifactType.Workflow]
         flow = Flow(
-            id=workflow_id,
-            name=info['appName'],
-            user=info['user'],
-            status=info['status'],
-            start=info['startTime'],
-            end=info['endTime']
+            id=data[job_strings.id],
+            name=data['appName'],
+            user=data['user'],
+            status=data['status'],
+            start=data['startTime'],
+            end=data['endTime']
         )
 
-        for action in info['actions']:
+        for action in data['actions']:
             name = action['name']
 
             if action['type'] == 'sub-workflow':
@@ -82,3 +87,6 @@ class Flow:
             name=self.name,
             status=self.status
         )
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__

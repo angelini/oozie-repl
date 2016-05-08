@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import IPython
 import itertools
 import os
@@ -25,9 +23,9 @@ def _get_jobs(form=Workflow, user=None, status=None, name=None, n=5):
     jobs = take(api.get_jobs(form=form, filters={'user': user, 'status': status, 'name': name}), n=n)
     job_strings = api.JOB_TYPE_STRINGS[form]
     if form == Workflow:
-        return [Flow.from_workflow_id(job[job_strings.id]) for job in jobs]
+        return [Flow.from_workflow_data(job) for job in jobs]
     elif form == Coordinator:
-        return [CoordinatorObject.from_coordinator_id(job[job_strings.id]) for job in jobs]
+        return [CoordinatorObject.from_coordinator_data(job) for job in jobs]
     else:
         raise ValueError('Unrecognized form %s' % form)
 
@@ -57,8 +55,9 @@ def open_graph(flow):
     subprocess.check_output(['open', path])
 
 
-try:
-    IPython.start_ipython(user_ns=globals())
-finally:
-    for path in _tempfiles:
-        os.remove(path)
+def repl():
+    try:
+        IPython.start_ipython(user_ns=globals())
+    finally:
+        for path in _tempfiles:
+            os.remove(path)
