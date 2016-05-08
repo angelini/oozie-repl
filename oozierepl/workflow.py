@@ -42,8 +42,7 @@ class Workflow:
 
     @staticmethod
     def from_workflow_id(workflow_id):
-        return from_workflow_data(api.get_job_info(workflow_id))
-
+        return Workflow.from_workflow_data(api.get_job_info(workflow_id))
 
     @staticmethod
     def from_workflow_data(data):

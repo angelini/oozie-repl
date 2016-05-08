@@ -5,7 +5,7 @@ class Coordinator:
 
     @staticmethod
     def from_coordinator_id(coordinator_id):
-        return from_coordinator_data(api.get_job_info(coordinator_id))
+        return Coordinator.from_coordinator_data(api.get_job_info(coordinator_id))
 
     @staticmethod
     def from_coordinator_data(data):

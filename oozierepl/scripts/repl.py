@@ -21,7 +21,6 @@ def take(generator, n=5):
 
 def _get_jobs(form=Workflow, user=None, status=None, name=None, n=5):
     jobs = take(api.get_jobs(form=form, filters={'user': user, 'status': status, 'name': name}), n=n)
-    job_strings = api.JOB_TYPE_STRINGS[form]
     if form == Workflow:
         return [WorkflowObject.from_workflow_data(job) for job in jobs]
     elif form == Coordinator:

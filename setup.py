@@ -26,6 +26,9 @@ setup(
             'pytest-cov==2.2.1',
             'responses==0.5.1',
         ],
+        'dev': [
+            'flake8==2.5.4'
+        ]
     },
     entry_points="""
     [console_scripts]

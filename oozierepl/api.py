@@ -5,7 +5,10 @@ from enum import Enum
 from collections import namedtuple
 
 
-ArtifactStrings = namedtuple('ArtifactApi', ('type', 'result_type', 'id', 'id_suffix'))
+ArtifactStrings = namedtuple(
+    'ArtifactApi',
+    ('type', 'result_type', 'id', 'id_suffix')
+)
 
 
 class ArtifactType(Enum):
@@ -16,10 +19,11 @@ class ArtifactType(Enum):
 
 
 JOB_TYPE_STRINGS = {
-    ArtifactType.Workflow: ArtifactStrings('wf', 'workflows', 'id', '-W'),
-    ArtifactType.Coordinator: ArtifactStrings('coordinator', 'coordinatorjobs', 'coordJobId', '-C'),
+    ArtifactType.Workflow:
+        ArtifactStrings('wf', 'workflows', 'id', '-W'),
+    ArtifactType.Coordinator:
+        ArtifactStrings('coordinator', 'coordinatorjobs', 'coordJobId', '-C'),
 }
-
 
 
 def oozie_host():
@@ -70,9 +74,12 @@ def get_coordinators(filters, offset=1, length=50):
 
 
 def get_graph_png(workflow_id):
-    response = requests.get(oozie_host() + '/oozie/v1/job/{}'.format(workflow_id), params={
-        'show': 'graph'
-    })
+    response = requests.get(
+        oozie_host() + '/oozie/v1/job/{}'.format(workflow_id),
+        params={
+            'show': 'graph'
+        }
+    )
 
     response.raise_for_status
     return response.content
