@@ -4,7 +4,7 @@
 
 ```
 $ export OOZIE_HOST="<host>"
-$ expore HISTORY_SERVER="<host>"
+$ export HISTORY_SERVER="<host>"
 ```
 
 ## Simple print
